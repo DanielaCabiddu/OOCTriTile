@@ -24,7 +24,8 @@ To build example applications included into the *examples* folder, use CMake.
 * Daniela Cabiddu (CNR IMATI), Marco Attene (CNR IMATI)
   
 ## Citing us
-OOCTriTile is described into a journal paper (https://doi.org/10.1016/j.cag.2015.05.015, Sez 3.1).
+OOCTriTile is described into a journal paper (https://doi.org/10.1016/j.cag.2015.05.015, see Sez. 3.1).
+
 If you use OOCTriTile in your academic projects, please consider citing it using the following BibTeX entry:
 
 ```bibtex
