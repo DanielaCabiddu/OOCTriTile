@@ -2,6 +2,8 @@
 
 OOCTriTile is an out-of-core (OOC) method to split trimeshes into smaller tiles, according a user-defined size (in terms of numebr of vertices per tile).
 
+<p align="center"><img src="representative_image.png" width="750"></p>
+
 ## Citing us
 
 If you use OOCTriTile in your academic projects, please consider citing it using the following BibTeX entry:
