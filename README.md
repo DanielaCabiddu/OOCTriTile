@@ -4,8 +4,27 @@ OOCTriTile is an out-of-core (OOC) method to split trimeshes into smaller tiles,
 
 <p align="center"><img src="graphical_abstract.jpg" width="750"></p>
 
-## Citing us
+## What is in
+OOCTriTile is provided as a collection of folders:
+* *examples*: standalone applications to be used as an example of OOCTriTile usage
+* *external*: externel dependencies, provided as git submodules
+* *include*: main source code, provided as a header-only C++ library
 
+## How to get it
+Please, use --recursive when cloning this repository.
+
+`git clone --recursive https://github.com/DanielaCabiddu/OOCTriTile`
+
+## How to make it work
+OOCTriTile is provided as a header-only library, included into the *include* folder. To include OOCTriTile in your project, simply include the *include* folder in your code.
+
+To build example applications included into the *examples* folder, use CMake.
+
+## Authors
+* Daniela Cabiddu (CNR IMATI), Marco Attene (CNR IMATI)
+  
+## Citing us
+OOCTriTile is described into a journal paper (https://doi.org/10.1016/j.cag.2015.05.015).
 If you use OOCTriTile in your academic projects, please consider citing it using the following BibTeX entry:
 
 ```bibtex
