@@ -43,29 +43,25 @@ class BspCell {
 public:
 
     bool is_bsp_root  = false;    // True if the cell represents the root of the BSP.
-    bool is_visited   = false;    // True if the cell is currently considered by the algorithm.
 
     int ID = 0;         // Identifier of the cell.
     int leaf_ID = 0;    // Referred to the BSP.
 
-    int color = 0;      // Color assigned to the cell. Adjacent cells have different colors.
-                        // Two cells having the same color are guaranteed to be independent.
-
     stxxl::uint64 n_inner_vertices   = 0;    // Number of vertices actually lying inside the cell.
     stxxl::uint64 n_inner_triangles  = 0;    // Number of triangles classified as belonging to the cell.
 
-    stxxl::vector<Vtx> inner_vertices;
-    stxxl::vector<TriangleStruct> inner_triangles;
-    stxxl::vector<stxxl::uint64> bv_vertices;
+//    stxxl::vector<Vtx> inner_vertices;
+//    stxxl::vector<TriangleStruct> inner_triangles;
+//    stxxl::vector<stxxl::uint64> bv_vertices;
 
     stxxl::uint64 usage = 0;     // Indicates for how long the file is open but unused
 
     Vtx bbox_min = { FLT_MAX,  FLT_MAX,  FLT_MAX};      // extreme minimum vertex
     Vtx bbox_max = {-FLT_MAX, -FLT_MAX, -FLT_MAX};      // extreme maximum vertex
 
-    BspCell *parent = NULL;     // parent cell
-    BspCell *left   = NULL;     // left child
-    BspCell *right  = NULL;     // right child
+    BspCell *parent = nullptr;     // parent cell
+    BspCell *left   = nullptr;     // left child
+    BspCell *right  = nullptr;     // right child
 
     std::set<int> neighbor_bsp_cells;   // Set of cells sharing at least one vertex.
                                         // Each neighbor cell is store by its position in the vector BinarySpacePartition::leaves.
@@ -102,8 +98,8 @@ public:
         double cell_z = (cell.bbox_min.z + cell.bbox_max.z) /2;
 
         if (x < cell_x) return true;
-        if (x == cell_x && y < cell_y) return true;
-        if (x == cell_x && y == cell_y && z < cell_z) return true;
+        if (std::abs (x-cell_x) < 1e-10 && y < cell_y) return true;
+        if (z < cell_z) return true;
 
         return false;
     }
@@ -118,8 +114,6 @@ public:
     std::map <uint64_t, Vtx *> getVertexGlobalIndexBlock(FILE **, uint64_t size);
 
     std::set<stxxl::uint64> getBoundaryVertices();
-
-    void updateMinMaxCoordinates (float, float, float);
 
     bool intersects (BspCell *);
 

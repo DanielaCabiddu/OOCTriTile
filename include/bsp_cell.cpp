@@ -67,16 +67,14 @@ const Plane BspCell::getSubdivisionPlane() const {
     return plane;
 }
 
-const bool BspCell::hasPoint (const double x, const double y, const double z) const {
-
-    double eps = 0.00000001;
-
-    if (	(x > bbox_min.x || abs(x - bbox_min.x) < eps)
-        &&	(x < bbox_max.x || abs(x - bbox_max.x) < eps)
-        &&	(y > bbox_min.y || abs(y - bbox_min.y) < eps)
-        &&	(y < bbox_max.y || abs(y - bbox_max.y) < eps)
-        &&	(z > bbox_min.z || abs(z - bbox_min.z) < eps)
-        &&	(z < bbox_max.z || abs(z - bbox_max.z) < eps) )
+const bool BspCell::hasPoint (const double x, const double y, const double z) const
+{
+    if (	x > bbox_min.x
+        &&	x < bbox_max.x
+        &&	y > bbox_min.y
+        &&	y < bbox_max.y
+        &&	z > bbox_min.z
+        &&	z < bbox_max.z )
 
         return true;
 
