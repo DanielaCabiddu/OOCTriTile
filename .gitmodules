@@ -4,3 +4,6 @@
 [submodule "external/tclap"]
 	path = external/tclap
 	url = https://github.com/mirror/tclap.git
+[submodule "external/cereal"]
+	path = external/cereal
+	url = https://github.com/USCiLab/cereal.git
