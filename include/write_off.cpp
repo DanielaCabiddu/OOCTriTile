@@ -28,11 +28,11 @@
 *********************************************************************************/
 #include "write_off.h"
 
-void write_bsp_OFF(const BinarySpacePartition &bsp, const std::string out_directory)
+void write_bsp_OFF( BinarySpacePartition &bsp, const std::string out_directory)
 {
-    for (int leaf=0; leaf < bsp.leaves.size(); leaf++)
+    for (int leaf=0; leaf < bsp.get_n_leaves(); leaf++)
     {
-        BspCell *cell = bsp.leaves.at(leaf);
+        BspCell *cell = bsp.get_leaf(leaf);
 
         if (cell->n_inner_vertices == 0)   
         {
@@ -72,8 +72,8 @@ void write_bsp_OFF(const BinarySpacePartition &bsp, const std::string out_direct
             exit(1);
         }
 
-        std::string out_filename = out_directory + "cell_" + std::to_string(cell->ID) + ".off";
-        std::string local2global_filename = out_directory + "cell_" + std::to_string(cell->ID) + "_v_loc2glob";
+        std::string out_filename = out_directory + "/cell_" + std::to_string(cell->ID) + ".off";
+        std::string local2global_filename = out_directory + "/cell_" + std::to_string(cell->ID) + "_v_loc2glob";
 
         cell->filename_mesh = out_filename;
         cell->filename_local2global = local2global_filename;
@@ -118,7 +118,7 @@ void write_bsp_OFF(const BinarySpacePartition &bsp, const std::string out_direct
 
         for (int v : added_vertices)
         {
-            mesh_out_stream << bsp.input_coords.at(v).x << " " << bsp.input_coords.at(v).y << " " << bsp.input_coords.at(v).z << std::endl;
+            mesh_out_stream << bsp.get_point(v).x << " " << bsp.get_point(v).y << " " << bsp.get_point(v).z << std::endl;
 
             global_local_vertices[v] = vid++;
 

@@ -51,7 +51,7 @@ struct ConstrainedVertex
 
 class BinarySpacePartition
 {
-public:
+private:
 
     BspCell root;                   // Sampled root node of the bsp. Generated be sampling the input mesh.
 
@@ -70,9 +70,16 @@ public:
     /// METHODS
     ///////////////////////////
 
+public:
+
     BinarySpacePartition () {}
 
     BinarySpacePartition (const BspCell &cell) { root = cell; leaves.push_back(&root);}
+
+    uint get_n_leaves () const { return leaves.size(); }
+    BspCell *get_leaf (const uint i) { return leaves.at(i); }
+
+    const Point &get_point (const uint i) { return input_coords.at(i); }
 
     void create (const int max_vtx_per_cell, const std::string out_directory);
     void fill   (const std::string input_binary_filename);

@@ -91,9 +91,9 @@ void create_triangle_mesh_tiling (const std::vector<std::string> input_filenames
     // Write the output according to selected output format
     write_bsp_OFF(bsp, out_directory);
 
-    for (int leaf = 0; leaf < bsp.leaves.size(); leaf++)
+    for (int leaf = 0; leaf < bsp.get_n_leaves(); leaf++)
     {
-        tile_filenames.push_back(bsp.leaves.at(leaf)->filename_mesh);
+        tile_filenames.push_back(bsp.get_leaf(leaf)->filename_mesh);
     }
 
     if (bufferzone_size > 0)
@@ -102,11 +102,11 @@ void create_triangle_mesh_tiling (const std::vector<std::string> input_filenames
 
         bufferzone_filenames.resize(tile_filenames.size());
 
-        for (int leaf = 0; leaf < bsp.leaves.size(); leaf++)
+        for (int leaf = 0; leaf < bsp.get_n_leaves(); leaf++)
         {
             bsp.create_bufferzone(leaf, bufferzone_size, out_directory);
 
-            for (std::string filename : bsp.leaves.at(leaf)->bufferzone_filenames)
+            for (std::string filename : bsp.get_leaf(leaf)->bufferzone_filenames)
                 bufferzone_filenames.at(leaf).push_back(filename);
         }
     }

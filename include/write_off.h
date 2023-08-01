@@ -31,7 +31,7 @@
 
 #include "bsp.h"
 
-void write_bsp_OFF (const BinarySpacePartition &bsp, const std::string out_directory);
+void write_bsp_OFF (BinarySpacePartition &bsp, const std::string out_directory);
 
 #ifndef OOCTRITILELIB_STATIC
 #include "write_off.cpp"

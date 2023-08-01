@@ -129,6 +129,7 @@ public:
         archive( CEREAL_NVP(leaf_ID));
         archive( CEREAL_NVP(bbox_min.x), CEREAL_NVP(bbox_min.y), CEREAL_NVP(bbox_min.z) );
         archive( CEREAL_NVP(bbox_max.x), CEREAL_NVP(bbox_max.y), CEREAL_NVP(bbox_max.z) );
+        archive( CEREAL_NVP(n_inner_vertices), CEREAL_NVP(n_inner_triangles) );
         archive( CEREAL_NVP(neighbor_bsp_cells) );
     }
 

@@ -64,9 +64,9 @@ public:
     {
         this->bsp = bsp;
 
-        for (int leaf = 0; leaf < bsp->leaves.size(); leaf++)
+        for (int leaf = 0; leaf < bsp->get_n_leaves(); leaf++)
         {
-            std::ofstream *os_v = new std::ofstream(bsp->leaves.at(leaf)->filename_inner_v.c_str(), std::ofstream::out | std::ofstream::binary);
+            std::ofstream *os_v = new std::ofstream(bsp->get_leaf(leaf)->filename_inner_v.c_str(), std::ofstream::out | std::ofstream::binary);
 
             if (os_v->is_open())
             {
@@ -76,7 +76,7 @@ public:
                 vOuts_usage.push_back(0);
             }
 
-            std::ofstream * os_t = new std::ofstream (bsp->leaves.at(leaf)->filename_inner_t.c_str(), std::ofstream::out | std::ofstream::binary);
+            std::ofstream * os_t = new std::ofstream (bsp->get_leaf(leaf)->filename_inner_t.c_str(), std::ofstream::out | std::ofstream::binary);
 
             if (os_t->is_open())
             {
@@ -86,7 +86,7 @@ public:
                 tOuts_usage.push_back(0);
             }
 
-            std::ofstream * os_bv = new std::ofstream (bsp->leaves.at(leaf)->filename_boundary_v.c_str(), std::ofstream::out | std::ofstream::binary);
+            std::ofstream * os_bv = new std::ofstream (bsp->get_leaf(leaf)->filename_boundary_v.c_str(), std::ofstream::out | std::ofstream::binary);
 
             if (os_bv->is_open())
             {

@@ -84,7 +84,7 @@ void FileManager::close_oldest_file()
 
 void FileManager::close_all ()
 {
-    for (int leaf = 0; leaf < bsp->leaves.size(); leaf++)
+    for (int leaf = 0; leaf < bsp->get_n_leaves(); leaf++)
     {
         if (vOuts.at(leaf)->is_open())
         {
@@ -116,11 +116,11 @@ void FileManager::guarantee_vOut_open  (const int leaf)
     if (n_open_files == max_open_file)
         close_oldest_file();
 
-    vOuts.at(leaf)->open (bsp->leaves.at(leaf)->filename_inner_v.c_str(), std::ofstream::app | std::ofstream::binary);
+    vOuts.at(leaf)->open (bsp->get_leaf(leaf)->filename_inner_v.c_str(), std::ofstream::app | std::ofstream::binary);
 
     if (!vOuts.at(leaf)->is_open())
     {
-        std::cout << "[ERROR] Opening file " << bsp->leaves.at(leaf)->filename_inner_v << std::endl;
+        std::cout << "[ERROR] Opening file " << bsp->get_leaf(leaf)->filename_inner_v << std::endl;
         exit(1);
     }
 
@@ -135,11 +135,11 @@ void FileManager::guarantee_tOut_open  (const int leaf)
     if (n_open_files == max_open_file)
         close_oldest_file();
 
-    tOuts.at(leaf)->open (bsp->leaves.at(leaf)->filename_inner_t.c_str(), std::ofstream::app | std::ofstream::binary);
+    tOuts.at(leaf)->open (bsp->get_leaf(leaf)->filename_inner_t.c_str(), std::ofstream::app | std::ofstream::binary);
 
     if (!tOuts.at(leaf)->is_open())
     {
-        std::cout << "[ERROR] Opening file " << bsp->leaves.at(leaf)->filename_inner_t << std::endl;
+        std::cout << "[ERROR] Opening file " << bsp->get_leaf(leaf)->filename_inner_t << std::endl;
         exit(1);
     }
 
@@ -154,11 +154,11 @@ void FileManager::guarantee_bvOut_open (const int leaf)
     if (n_open_files == max_open_file)
         close_oldest_file();
 
-    bvOuts.at(leaf)->open (bsp->leaves.at(leaf)->filename_boundary_v.c_str(), std::ofstream::app | std::ofstream::binary);
+    bvOuts.at(leaf)->open (bsp->get_leaf(leaf)->filename_boundary_v.c_str(), std::ofstream::app | std::ofstream::binary);
 
     if (!bvOuts.at(leaf)->is_open())
     {
-        std::cout << "[ERROR] Opening file " << bsp->leaves.at(leaf)->filename_boundary_v << std::endl;
+        std::cout << "[ERROR] Opening file " << bsp->get_leaf(leaf)->filename_boundary_v << std::endl;
         exit(1);
     }
 
@@ -175,7 +175,7 @@ void FileManager::write_vertex (const int leaf, const stxxl::uint64 vid, const d
 
     if ((vOuts.at(leaf)->fail()))
     {
-        std::cout << "[ERROR] Writing vertex " << vid << " in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing vertex " << vid << " in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -183,7 +183,7 @@ void FileManager::write_vertex (const int leaf, const stxxl::uint64 vid, const d
 
     if ((vOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing vertex " << vid << " in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing vertex " << vid << " in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -191,7 +191,7 @@ void FileManager::write_vertex (const int leaf, const stxxl::uint64 vid, const d
 
     if ((vOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing vertex " << vid << " in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing vertex " << vid << " in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -199,7 +199,7 @@ void FileManager::write_vertex (const int leaf, const stxxl::uint64 vid, const d
 
     if ((vOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing vertex " << vid << " in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing vertex " << vid << " in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -216,7 +216,7 @@ void FileManager::write_boundary_vertex (const int leaf, const stxxl::uint64 vid
 
     if ((vOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing boundary vertex " << vid << " in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing boundary vertex " << vid << " in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -224,7 +224,7 @@ void FileManager::write_boundary_vertex (const int leaf, const stxxl::uint64 vid
 
     if ((bvOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing boundary vertex " << vid << " in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing boundary vertex " << vid << " in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -232,7 +232,7 @@ void FileManager::write_boundary_vertex (const int leaf, const stxxl::uint64 vid
 
     if ((bvOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing boundary vertex " << vid << " in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing boundary vertex " << vid << " in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -240,7 +240,7 @@ void FileManager::write_boundary_vertex (const int leaf, const stxxl::uint64 vid
 
     if ((bvOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing boundary vertex " << vid << " in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing boundary vertex " << vid << " in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -257,7 +257,7 @@ void FileManager::write_boundary_vertex (const int leaf, const stxxl::uint64 vid
 
     if ((bvOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing boundary vertex " << vid << " in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing boundary vertex " << vid << " in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -274,7 +274,7 @@ void FileManager::write_triangle (const int leaf, const stxxl::uint64 v1, const 
 
     if ((tOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing triangle in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing triangle in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -282,7 +282,7 @@ void FileManager::write_triangle (const int leaf, const stxxl::uint64 v1, const 
 
     if ((tOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing triangle in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing triangle in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
@@ -290,7 +290,7 @@ void FileManager::write_triangle (const int leaf, const stxxl::uint64 v1, const 
 
     if ((tOuts.at(leaf)->rdstate() & std::ofstream::badbit) != 0)
     {
-        std::cout << "[ERROR] Writing triangle in cell " << bsp->leaves.at(leaf)->ID << std::endl;
+        std::cout << "[ERROR] Writing triangle in cell " << bsp->get_leaf(leaf)->ID << std::endl;
         exit(1);
     }
 
