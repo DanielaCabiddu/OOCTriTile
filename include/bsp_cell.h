@@ -36,6 +36,8 @@
 #include <float.h>
 #include <fstream>
 
+#include <cereal/types/set.hpp>
+
 class BspCell {
 
 public:
@@ -44,7 +46,7 @@ public:
     bool is_visited   = false;    // True if the cell is currently considered by the algorithm.
 
     int ID = 0;         // Identifier of the cell.
-    int position = 0;   // Referred to the BSP.
+    int leaf_ID = 0;    // Referred to the BSP.
 
     int color = 0;      // Color assigned to the cell. Adjacent cells have different colors.
                         // Two cells having the same color are guaranteed to be independent.
@@ -58,8 +60,8 @@ public:
 
     stxxl::uint64 usage = 0;     // Indicates for how long the file is open but unused
 
-    Vtx v1 = { FLT_MAX,  FLT_MAX,  FLT_MAX};      // extreme minimum vertex
-    Vtx v2 = {-FLT_MAX, -FLT_MAX, -FLT_MAX};      // extreme maximum vertex
+    Vtx bbox_min = { FLT_MAX,  FLT_MAX,  FLT_MAX};      // extreme minimum vertex
+    Vtx bbox_max = {-FLT_MAX, -FLT_MAX, -FLT_MAX};      // extreme maximum vertex
 
     BspCell *parent = NULL;     // parent cell
     BspCell *left   = NULL;     // left child
@@ -91,13 +93,13 @@ public:
     bool operator< (const BspCell & cell) const
     {
         // by lexicographic order of barycenters
-        double x = (v1.x + v2.x) /2;
-        double y = (v1.y + v2.y) /2;
-        double z = (v1.z + v2.z) /2;
+        double x = (bbox_min.x + bbox_max.x) /2;
+        double y = (bbox_min.y + bbox_max.y) /2;
+        double z = (bbox_min.z + bbox_max.z) /2;
 
-        double cell_x = (cell.v1.x + cell.v2.x) /2;
-        double cell_y = (cell.v1.y + cell.v2.y) /2;
-        double cell_z = (cell.v1.z + cell.v2.z) /2;
+        double cell_x = (cell.bbox_min.x + cell.bbox_max.x) /2;
+        double cell_y = (cell.bbox_min.y + cell.bbox_max.y) /2;
+        double cell_z = (cell.bbox_min.z + cell.bbox_max.z) /2;
 
         if (x < cell_x) return true;
         if (x == cell_x && y < cell_y) return true;
@@ -120,6 +122,16 @@ public:
     void updateMinMaxCoordinates (float, float, float);
 
     bool intersects (BspCell *);
+
+    template<class Archive>
+    void serialize(Archive & archive)
+    {
+        archive( CEREAL_NVP(leaf_ID));
+        archive( CEREAL_NVP(bbox_min.x), CEREAL_NVP(bbox_min.y), CEREAL_NVP(bbox_min.z) );
+        archive( CEREAL_NVP(bbox_max.x), CEREAL_NVP(bbox_max.y), CEREAL_NVP(bbox_max.z) );
+        archive( CEREAL_NVP(neighbor_bsp_cells) );
+    }
+
 };
 
 #ifndef OOCTRITILELIB_STATIC

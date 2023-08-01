@@ -21,7 +21,7 @@ include_directories(BEFORE ${CMAKE_SOURCE_DIR}/../../include)
 include_directories(BEFORE ${CMAKE_SOURCE_DIR}/../../external/stxxl/include)
 include_directories(BEFORE ${CMAKE_SOURCE_DIR}/../../external/stxxl/build/include)
 include_directories(BEFORE ${CMAKE_SOURCE_DIR}/../../external/tclap/include)
-
+include_directories(BEFORE ${CMAKE_SOURCE_DIR}/../../external/cereal/include)
 
 add_executable(${PROJECT_NAME} main.cpp ${STXXL_LIB})
 

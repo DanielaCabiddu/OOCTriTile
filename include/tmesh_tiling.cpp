@@ -111,6 +111,14 @@ void create_triangle_mesh_tiling (const std::vector<std::string> input_filenames
         }
     }
 
+    std::string bsp_filename = out_directory + "/bsp.json";
+    std::ofstream bsp_file (bsp_filename);
+
+    cereal::JSONOutputArchive ar( bsp_file );
+    bsp.serialize(ar);
+
+    std::cout << "Saved in " << bsp_filename << std::endl;
+
 #endif
 }
 

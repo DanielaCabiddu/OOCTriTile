@@ -72,8 +72,8 @@ void write_bsp_OFF(const BinarySpacePartition &bsp, const std::string out_direct
             exit(1);
         }
 
-        std::string out_filename = out_directory + "cell_" + std::to_string(leaf) + ".off";
-        std::string local2global_filename = out_directory + "cell_" + std::to_string(leaf) + "_v_loc2glob";
+        std::string out_filename = out_directory + "cell_" + std::to_string(cell->ID) + ".off";
+        std::string local2global_filename = out_directory + "cell_" + std::to_string(cell->ID) + "_v_loc2glob";
 
         cell->filename_mesh = out_filename;
         cell->filename_local2global = local2global_filename;

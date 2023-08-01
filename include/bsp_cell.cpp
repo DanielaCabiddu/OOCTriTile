@@ -30,8 +30,8 @@
 
 BspCell::BspCell (const Vtx &v1, const Vtx &v2)
 {
-    this->v1 = v1;
-    this->v2 = v2;
+    this->bbox_min = v1;
+    this->bbox_max = v2;
 }
 
 const Plane BspCell::getSubdivisionPlane() const {
@@ -39,27 +39,27 @@ const Plane BspCell::getSubdivisionPlane() const {
     Plane plane;
 
     // get bounding box edge length
-    double x_dim = v2.x - v1.x;
-    double y_dim = v2.y - v1.y;
-    double z_dim = v2.z - v1.z;
+    double x_dim = bbox_max.x - bbox_min.x;
+    double y_dim = bbox_max.y - bbox_min.y;
+    double z_dim = bbox_max.z - bbox_min.z;
 
     // get the middle point of the largest dimension
     if (std::max(x_dim, std::max(y_dim, z_dim)) == x_dim ) {
 
-        plane.min = Vtx(v1.x + x_dim/2, v1.y, v1.z);
-        plane.max = Vtx(v2.x - x_dim/2, v2.y, v2.z);
+        plane.min = Vtx(bbox_min.x + x_dim/2, bbox_min.y, bbox_min.z);
+        plane.max = Vtx(bbox_max.x - x_dim/2, bbox_max.y, bbox_max.z);
         plane.axis = 0; // x
 
     } else if (std::max(x_dim, std::max(y_dim, z_dim)) == y_dim) {
 
-        plane.min = Vtx(v1.x, v1.y + y_dim/2, v1.z);
-        plane.max = Vtx(v2.x, v2.y - y_dim/2, v2.z);
+        plane.min = Vtx(bbox_min.x, bbox_min.y + y_dim/2, bbox_min.z);
+        plane.max = Vtx(bbox_max.x, bbox_max.y - y_dim/2, bbox_max.z);
         plane.axis = 1; // y
 
     } else {
 
-        plane.min = Vtx(v1.x, v1.y, v1.z + z_dim/2);
-        plane.max = Vtx(v2.x, v2.y, v2.z - z_dim/2);
+        plane.min = Vtx(bbox_min.x, bbox_min.y, bbox_min.z + z_dim/2);
+        plane.max = Vtx(bbox_max.x, bbox_max.y, bbox_max.z - z_dim/2);
         plane.axis = 2; // z
 
     }
@@ -71,12 +71,12 @@ const bool BspCell::hasPoint (const double x, const double y, const double z) co
 
     double eps = 0.00000001;
 
-    if (	(x > v1.x || abs(x - v1.x) < eps)
-        &&	(x < v2.x || abs(x - v2.x) < eps)
-        &&	(y > v1.y || abs(y - v1.y) < eps)
-        &&	(y < v2.y || abs(y - v2.y) < eps)
-        &&	(z > v1.z || abs(z - v1.z) < eps)
-        &&	(z < v2.z || abs(z - v2.z) < eps) )
+    if (	(x > bbox_min.x || abs(x - bbox_min.x) < eps)
+        &&	(x < bbox_max.x || abs(x - bbox_max.x) < eps)
+        &&	(y > bbox_min.y || abs(y - bbox_min.y) < eps)
+        &&	(y < bbox_max.y || abs(y - bbox_max.y) < eps)
+        &&	(z > bbox_min.z || abs(z - bbox_min.z) < eps)
+        &&	(z < bbox_max.z || abs(z - bbox_max.z) < eps) )
 
         return true;
 

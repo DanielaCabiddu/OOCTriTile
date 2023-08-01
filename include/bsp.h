@@ -35,6 +35,9 @@
 #include <set>
 #include <vector>
 
+#include <cereal/archives/json.hpp>
+#include <cereal/types/vector.hpp>
+
 #define UNKNOWN_BOUNDARY_INFO -2
 #define CONSTRAINED_BOUNDARY_VERTEX -1
 
@@ -84,6 +87,24 @@ public:
 
     void classify_triangle (const stxxl::uint64 v1, const stxxl::uint64 v2, const stxxl::uint64 v3,
                             std::pair<int, int> & selected_cell_vtx, std::pair<int, int> & neighbor_cell_vtx_1, std::pair<int, int> & neighbor_cell_vtx_2);
+
+    template <class Archive>
+    void serialize( Archive & ar )
+    {
+        std::vector<BspCell> cells;
+        for (uint l=0; l < leaves.size();l++)
+            cells.push_back(*(leaves.at(l)));
+        ar (CEREAL_NVP(cells));
+
+        cells.clear();
+    }
+
+    template <class Archive>
+    void deserialize( Archive & ar )
+    {
+//        ar (CEREAL_NVP(leaves));
+    }
+
 };
 
 #ifndef OOCTRITILELIB_STATIC

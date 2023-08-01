@@ -70,7 +70,7 @@ void BinarySpacePartition::create(const int max_vtx_per_cell, const std::string 
     {
         BspCell *cell = leaves.at(i);
 
-        cell->position = i;
+        cell->leaf_ID = i;
         cell->n_inner_vertices = 0;
 
         remove(cell->filename_inner_v.c_str());
@@ -84,8 +84,8 @@ void BinarySpacePartition::split_cell (BspCell &cell, const std::string out_dire
     Plane plane = cell.getSubdivisionPlane();
 
     // create children
-    cell.left = new BspCell (plane.min, cell.v2);
-    cell.right = new BspCell (cell.v1, plane.max);
+    cell.left = new BspCell (plane.min, cell.bbox_max);
+    cell.right = new BspCell (cell.bbox_min, plane.max);
 
     cell.left->parent = &cell;
     cell.right->parent = &cell;
@@ -307,7 +307,7 @@ void BinarySpacePartition::fill (const std::string input_binary_filename)
                 else cell = cell->right;
             }
 
-            curr_cell_pos = cell->position;
+            curr_cell_pos = cell->leaf_ID;
             curr_cell_id = cell->ID;
         }
 
@@ -484,7 +484,7 @@ void BinarySpacePartition::classify_triangle (const stxxl::uint64 v1, const stxx
     {
         BspCell min = get_minimum_cell(*(leaves.at(cell_pos_v1)), get_minimum_cell(*(leaves.at(cell_pos_v2)), *(leaves.at(cell_pos_v3))));
 
-        selected_cell_vtx.first = min.position;
+        selected_cell_vtx.first = min.leaf_ID;
 
         if (selected_cell_vtx.first == cell_pos_v1)
         {
