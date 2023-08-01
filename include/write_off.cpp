@@ -30,6 +30,9 @@
 
 void write_bsp_OFF( BinarySpacePartition &bsp, const std::string out_directory)
 {
+
+    stxxl::uint64 perc_leaves = (stxxl::uint64)(bsp.get_n_leaves() / 10);
+
     for (int leaf=0; leaf < bsp.get_n_leaves(); leaf++)
     {
         BspCell *cell = bsp.get_leaf(leaf);
@@ -77,8 +80,6 @@ void write_bsp_OFF( BinarySpacePartition &bsp, const std::string out_directory)
 
         cell->filename_mesh = out_filename;
         cell->filename_local2global = local2global_filename;
-
-        std::cout << "[OUTPUT] Writing " << out_filename << std::endl;
 
         std::map <stxxl::uint64, int> global_local_vertices;
 
@@ -156,5 +157,11 @@ void write_bsp_OFF( BinarySpacePartition &bsp, const std::string out_directory)
         remove (cell->filename_inner_v.c_str());
         remove (cell->filename_boundary_v.c_str());
         remove (cell->filename_inner_t.c_str());
+
+        if ((leaf%perc_leaves) == 0)
+            std::cout << " --- --- Written tiles .. " << leaf << " \\ " << bsp.get_n_leaves() << " ( " << (leaf / perc_leaves) * 10 << "% )" << std::endl;
+
+        if (leaf == bsp.get_n_leaves() - 1)
+            std::cout << " --- --- Written tiles .. " << leaf+1 << " \\ " << bsp.get_n_leaves() << " -- COMPLETED" << std::endl;
     }
 }

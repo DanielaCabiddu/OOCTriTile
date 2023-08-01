@@ -88,8 +88,12 @@ void create_triangle_mesh_tiling (const std::vector<std::string> input_filenames
     // Fill the BSP cells by reading the original input (both vertices and triangles)
     bsp.fill(binary_filename);
 
+    std::cout << "[OUTPUT] Writing output tiles in " << out_directory << " ... " << std::endl;
+
     // Write the output according to selected output format
     write_bsp_OFF(bsp, out_directory);
+
+    std::cout << "[OUTPUT] Writing output tiles in " << out_directory << " ... COMPLETED. " << std::endl;
 
     for (int leaf = 0; leaf < bsp.get_n_leaves(); leaf++)
     {
@@ -114,10 +118,12 @@ void create_triangle_mesh_tiling (const std::vector<std::string> input_filenames
     std::string bsp_filename = out_directory + "/bsp.json";
     std::ofstream bsp_file (bsp_filename);
 
+    std::cout << "[OUTPUT] Writing BSP in " << bsp_filename << " ... " << std::endl;
+
     cereal::JSONOutputArchive ar( bsp_file );
     bsp.serialize(ar);
 
-    std::cout << "Saved in " << bsp_filename << std::endl;
+    std::cout << "[OUTPUT] Writing BSP in " << bsp_filename << " ... COMPLETED." << std::endl;
 
 #endif
 }
