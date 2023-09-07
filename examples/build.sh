@@ -2,5 +2,5 @@
 
 mkdir -p build
 cd build
-cmake ..
+cmake -DCMAKE_CXX_STANDARD=11 ..
 make -j8
