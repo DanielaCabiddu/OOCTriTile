@@ -1,0 +1,22 @@
+name: macos-build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: build
+        env:
+          CC: clang
+          CXX: clang++
+        run: |
+          cd examples
+          ./build.sh
+      # - name: test
+      #  run: |
+      #    ./test.sh
