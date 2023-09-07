@@ -25,6 +25,12 @@ include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/stxxl/buil
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/tclap/include)
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/cereal/include)
 
+if(MSVC)
+	include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/dirent_win)
+endif()
+
+
+
 add_executable(${PROJECT_NAME} main.cpp ${STXXL_LIB})
 
 target_link_libraries(${PROJECT_NAME} ${STXXL_LIB})
