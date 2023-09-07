@@ -17,11 +17,11 @@ add_custom_command(
   WORKING_DIRECTORY ${STXXL_DIR}
 )
 
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/../../include)
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/../../external/stxxl/include)
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/../../external/stxxl/build/include)
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/../../external/tclap/include)
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/../../external/cereal/include)
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../include)
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/stxxl/include)
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/stxxl/build/include)
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/tclap/include)
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/cereal/include)
 
 add_executable(${PROJECT_NAME} main.cpp ${STXXL_LIB})
 
