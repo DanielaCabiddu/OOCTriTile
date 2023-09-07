@@ -315,15 +315,18 @@ void BinarySpacePartition::fill (const std::string input_binary_filename)
 
         cell->n_inner_vertices++;
 
-        vtx2cell.push_back(curr_cell_pos);              // mapping vertex --> bsp_cell
-        vtx2boundary.push_back(UNKNOWN_BOUNDARY_INFO);  // no information about "is it on the boundary of current cell?"
+        if (n_triangles > 0)
+        {
+            vtx2cell.push_back(curr_cell_pos);              // mapping vertex --> bsp_cell
+            vtx2boundary.push_back(UNKNOWN_BOUNDARY_INFO);  // no information about "is it on the boundary of current cell?"
 
-        Point point;
-        point.x = x;
-        point.y = y;
-        point.z = z;
+            Point point;
+            point.x = x;
+            point.y = y;
+            point.z = z;
 
-        input_coords.push_back(point);
+            input_coords.push_back(point);
+        }
     }
 
     std::cout << "[VERTEX CLASSIFICATION] Completed." << std::endl << std::endl;
