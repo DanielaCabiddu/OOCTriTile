@@ -10,9 +10,11 @@ add_definitions(-DSTXXL)
 set (STXXL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../external/stxxl)
 set (STXXL_LIB ${STXXL_DIR}/build/lib/libstxxl.a)
 
+file(MAKE_DIRECTORY ${STXXL_DIR}/build)
+
 add_custom_command(
   OUTPUT ${STXXL_LIB}
-  COMMAND mkdir -p build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make -j8
+  COMMAND cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
   #DEPENDS ${SOURCE_FILES} /tmp/bin/create_foo_hh main.cpp
   WORKING_DIRECTORY ${STXXL_DIR}
 )
