@@ -17,6 +17,7 @@ jobs:
       - name: build
         shell: bash
         run: |
+          cd examples
           ./build.sh
       #- name: test
       #  shell: bash
