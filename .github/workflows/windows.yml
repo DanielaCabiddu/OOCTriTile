@@ -1,0 +1,24 @@
+name: windows-build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Set up Visual Studio shell
+        uses: egor-tensin/vs-shell@v2
+        with:
+          arch: x64
+      - name: build
+        shell: bash
+        run: |
+          ./build.sh
+      #- name: test
+      #  shell: bash
+        # run: |
+          # echo "./test.sh"
