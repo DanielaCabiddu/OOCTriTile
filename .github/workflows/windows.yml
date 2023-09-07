@@ -18,7 +18,10 @@ jobs:
         shell: bash
         run: |
           cd examples
-          ./build.sh
+          mkdir -p build
+          cd build
+          cmake -G "Visual Studio 17 2022" CMAKE_CXX_STANDARD=11 ..
+          make -j8
       #- name: test
       #  shell: bash
         # run: |
