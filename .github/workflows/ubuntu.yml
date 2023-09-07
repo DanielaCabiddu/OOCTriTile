@@ -1,0 +1,22 @@
+name: ubuntu-build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: build
+        env:
+          CC: gcc-9
+          CXX: g++-9
+        run: |
+          cd examples
+          ./build.sh
+      # - name: test
+      #  run: |
+      #    ./test.sh
