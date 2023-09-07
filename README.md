@@ -18,7 +18,7 @@ Please, use --recursive when cloning this repository.
 ## How to make it work
 OOCTriTile is provided as a header-only library, included into the *include* folder. To include OOCTriTile in your project, simply include the *include* folder in your code.
 
-To build example applications included into the *examples* folder, use CMake.
+To build example applications included into the *examples* folder, use the *build.sh* script available in the *example* folder.
 
 ## Authors
 * Daniela Cabiddu (CNR IMATI), Marco Attene (CNR IMATI)
