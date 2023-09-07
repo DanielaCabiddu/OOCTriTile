@@ -27,12 +27,12 @@
 *                                                                               *
 *********************************************************************************/
 #include <iostream>
+#include <limits.h>       //For PATH_MAX
+
+#include "dirent.h"
 
 #include "tmesh_tiling.h"
 #include "tclap/CmdLine.h"
-
-#include <filesystem>
-namespace fs = std::filesystem;
 
 using namespace std;
 
@@ -69,8 +69,23 @@ int main(int argc, char **argv)
 
     if (dirArg.isSet())
     {
-        for (const auto & entry : fs::directory_iterator(dirArg.getValue()))
-            filenames.push_back(entry.path());
+        DIR *dir;
+        struct dirent *ent;
+        if ((dir = opendir (dirArg.getValue().c_str())) != NULL)
+        {
+            /* print all the files and directories within directory */
+            while ((ent = readdir (dir)) != NULL)
+            {
+                std::string path = dirArg.getValue() + "/" + ent->d_name;
+                filenames.push_back(path);
+                printf ("%s\n", path.c_str());
+            }
+            closedir (dir);
+        } else {
+            /* could not open directory */
+            perror ("");
+            return EXIT_FAILURE;
+        }
     }
 
     const std::string output_directory = outArg.getValue();
