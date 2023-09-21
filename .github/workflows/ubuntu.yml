@@ -6,6 +6,7 @@ on:
     - examples/**
     - include/**
     - external/**
+    - .github.workflows/ubuntu.yml
 
 jobs:
   build:
@@ -22,6 +23,7 @@ jobs:
         run: |
           cd examples
           ./build.sh
-      # - name: test
-      #  run: |
-      #    ./test.sh
+      - name: test
+        run: |
+          cd examples
+          ./test.sh
