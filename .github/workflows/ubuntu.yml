@@ -6,7 +6,7 @@ on:
     - examples/**
     - include/**
     - external/**
-    - .github.workflows/ubuntu.yml
+    - .github/workflows/ubuntu.yml
 
 jobs:
   build:
