@@ -6,6 +6,7 @@ on:
     - examples/**
     - include/**
     - external/**
+    - .github/workflows/macos.yml
 
 jobs:
   build:
