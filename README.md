@@ -9,6 +9,7 @@ OOCTriTile is provided as a collection of folders:
 * *examples*: standalone applications to be used as an example of OOCTriTile usage
 * *external*: externel dependencies, provided as git submodules
 * *include*: main source code, provided as a header-only C++ library
+* *data*: input data (triangle meshes) used for testing
 
 ## How to get it
 Please, use --recursive when cloning this repository.
@@ -19,6 +20,7 @@ Please, use --recursive when cloning this repository.
 OOCTriTile is provided as a header-only library, included into the *include* folder. To include OOCTriTile in your project, simply include the *include* folder in your code.
 
 To build example applications included into the *examples* folder, use the *build.sh* script available in the *example* folder.
+To test example applications, use the *test.sh* script available in the *example* folder.
 
 ### Example build status
 
