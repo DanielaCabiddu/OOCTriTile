@@ -1,6 +1,11 @@
 name: ubuntu-build
 
-on: [push]
+on:
+  push:
+    paths:
+    - examples/**
+    - include/**
+    - external/**
 
 jobs:
   build:
