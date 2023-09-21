@@ -22,6 +22,7 @@ jobs:
         run: |
           cd examples
           ./build.sh
-      # - name: test
-      #  run: |
-      #    ./test.sh
+      - name: test
+        run: |
+          cd examples
+          ./test.sh
