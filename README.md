@@ -20,6 +20,11 @@ OOCTriTile is provided as a header-only library, included into the *include* fol
 
 To build example applications included into the *examples* folder, use the *build.sh* script available in the *example* folder.
 
+### Example build status
+
+* [![Linux-Ubuntu build status](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/ubuntu.yml)
+* [![Mac build status](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/macos.yml/badge.svg)](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/macos.yml)
+
 ## Authors
 * Daniela Cabiddu (CNR IMATI), Marco Attene (CNR IMATI)
   
