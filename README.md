@@ -26,6 +26,8 @@ To test example applications, use the *test.sh* script available in the *example
 
 * [![Linux-Ubuntu build status](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/ubuntu.yml)
 * [![Mac build status](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/macos.yml/badge.svg)](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/macos.yml)
+* [![Windows-MSVC2022 build status](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/windows.yml/badge.svg)](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/windows.yml)
+
 
 ## Authors
 * Daniela Cabiddu (CNR IMATI), Marco Attene (CNR IMATI)
