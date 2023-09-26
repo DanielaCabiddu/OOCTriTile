@@ -15,9 +15,9 @@ jobs:
           - os: ubuntu-latest
             artifact_name: 01_Trimesh_Tiling
             asset_name: 01_Trimesh_Tiling-linux-amd64
-          #- os: windows-latest
-          #  artifact_name: mything.exe
-          #  asset_name: mything-windows-amd64
+          - os: windows-latest
+            artifact_name: 01_Trimesh_Tiling.exe
+            asset_name: 01_Trimesh_Tiling-windows-amd64
           - os: macos-latest
             artifact_name: 01_Trimesh_Tiling
             asset_name: 01_Trimesh_Tiling-macos-amd64
@@ -28,11 +28,23 @@ jobs:
           submodules: recursive
     - name: Build
       run: |
-        cd examples
-        mkdir build
-        cd build
-        cmake .. -DCMAKE-BUILD_TYPE=Release
-        cmake --build . --parallel 8
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            sed -i '25d' external/stxxl/include/stxxl/bits/msvc_compatibility.h
+            sed -i '24d' external/stxxl/include/stxxl/bits/msvc_compatibility.h
+            sed -i '23d' external/stxxl/include/stxxl/bits/msvc_compatibility.h
+            sed -i '22d' external/stxxl/include/stxxl/bits/msvc_compatibility.h
+            cd examples
+            mkdir build
+            cd build
+            cmake .. -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 17 2022" 
+            cmake --build . --config Release --parallel 8
+          else
+            cd examples
+            mkdir build
+            cd build
+            cmake .. -DCMAKE-BUILD_TYPE=Release
+            cmake --build . --parallel 8
+          fi
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
