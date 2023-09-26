@@ -2,6 +2,8 @@
 
 OOCTriTile is an out-of-core (OOC) method to split trimeshes into smaller tiles, according a user-defined size (in terms of numebr of vertices per tile).
 
+Currently, OOCTriTile supports only triangle meshes encoded either as a single or a collection of OFF files.
+
 <p align="center"><img src="graphical_abstract.jpg" width="750"></p>
 
 ## What is in
