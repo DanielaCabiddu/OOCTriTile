@@ -22,12 +22,17 @@ OOCTriTile is provided as a header-only library, included into the *include* fol
 To build example applications included into the *examples* folder, use the *build.sh* script available in the *example* folder.
 To test example applications, use the *test.sh* script available in the *example* folder.
 
-### Example build status
+### Build status
 
+#### Linux-Ubuntu (latest)
 * [![Linux-Ubuntu build status](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/ubuntu.yml)
-* [![Mac build status](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/macos.yml/badge.svg)](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/macos.yml)
-* [![Windows-MSVC2022 build status](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/windows.yml/badge.svg)](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/windows.yml)
 
+#### MacOS (latest)
+* [![Mac build status](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/macos.yml/badge.svg)](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/macos.yml)
+
+#### Windows (latest)
+Microsoft Visual Studio 17 2022 is incompatible with the external dependency STXXL. To make it work, please either comment or remove lines 22-25 in *external/stxxl/include/stxxl/bits/msvc_compatibility.h*.
+* [![Windows-MSVC2022 build status](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/windows.yml/badge.svg)](https://github.com/DanielaCabiddu/OOCTriTile/actions/workflows/windows.yml)
 
 ## Authors
 * Daniela Cabiddu (CNR IMATI), Marco Attene (CNR IMATI)
