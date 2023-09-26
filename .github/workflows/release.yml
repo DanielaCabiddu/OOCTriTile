@@ -1,4 +1,4 @@
-name: publish-binaries
+name: publish-release
 
 on:
   push:
@@ -14,13 +14,13 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: 01_Trimesh_Tiling
-            asset_name: 01_Trimesh_Tiling-linux-amd64
+            asset_name: 01_Trimesh_Tiling-linux-x64
           - os: windows-latest
             artifact_name: 01_Trimesh_Tiling.exe
-            asset_name: 01_Trimesh_Tiling-windows-amd64
+            asset_name: 01_Trimesh_Tiling-windows-x64.exe
           - os: macos-latest
             artifact_name: 01_Trimesh_Tiling
-            asset_name: 01_Trimesh_Tiling-macos-amd64
+            asset_name: 01_Trimesh_Tiling-macos-x64
 
     steps:
     - uses: actions/checkout@v3
@@ -47,6 +47,8 @@ jobs:
             cd build
             cmake .. -DCMAKE-BUILD_TYPE=Release
             cmake --build . --parallel 8
+    - name: Set Executable Permissions to All
+      run: chmod +x 01_Trimesh_Tiling/${{ matrix.artifact_name }}
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
