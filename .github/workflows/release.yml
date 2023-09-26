@@ -38,6 +38,7 @@ jobs:
             cd build
             cmake .. -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 17 2022" 
             cmake --build . --config Release --parallel 8
+            cp 01_Trimesh_Tiling/Release/01_Trimesh_Tiling.exe 01_Trimesh_Tiling/
     - name: Build-Unix
       if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
       run: |
