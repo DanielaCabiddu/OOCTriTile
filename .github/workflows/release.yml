@@ -1,0 +1,40 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  publish:
+    name: Publish for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: 01_Trimesh_Tiling
+            asset_name: 01_Trimesh_Tiling-linux-amd64
+          #- os: windows-latest
+          #  artifact_name: mything.exe
+          #  asset_name: mything-windows-amd64
+          - os: macos-latest
+            artifact_name: 01_Trimesh_Tiling
+            asset_name: 01_Trimesh_Tiling-macos-amd64
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: 
+        cd examples
+        mkdir build
+        cd build
+        cmake .. -DCMAKE-BUILD_TYPE=Release
+        cmake --build . --parallel 8
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: examples/build/01_Trimesh_Tiling/${{ matrix.artifact_name }}
+        asset_name: ${{ matrix.asset_name }}
+        tag: ${{ github.ref }}
