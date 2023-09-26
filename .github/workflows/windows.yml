@@ -18,6 +18,10 @@ jobs:
           submodules: recursive
       - name: build
         run: |
+          sed -i '25d' external/stxxl/include/stxxl/bits/msvc_compatibility.h
+          sed -i '24d' external/stxxl/include/stxxl/bits/msvc_compatibility.h
+          sed -i '23d' external/stxxl/include/stxxl/bits/msvc_compatibility.h
+          sed -i '22d' external/stxxl/include/stxxl/bits/msvc_compatibility.h
           cd examples
           mkdir build
           cd build
