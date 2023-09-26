@@ -48,7 +48,7 @@ jobs:
             cmake .. -DCMAKE-BUILD_TYPE=Release
             cmake --build . --parallel 8
     - name: Set Executable Permissions to All
-      run: chmod +x 01_Trimesh_Tiling/${{ matrix.artifact_name }}
+      run: chmod +x examples/build/01_Trimesh_Tiling/${{ matrix.artifact_name }}
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
