@@ -12,22 +12,32 @@ set (STXXL_LIB ${STXXL_DIR}/build/lib/libstxxl.a)
 
 file(MAKE_DIRECTORY ${STXXL_DIR}/build)
 
-add_custom_command(
-  OUTPUT ${STXXL_LIB}
-  COMMAND cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
-  #DEPENDS ${SOURCE_FILES} /tmp/bin/create_foo_hh main.cpp
-  WORKING_DIRECTORY ${STXXL_DIR}
-)
+if(MSVC)
+	include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/dirent_win)
+
+	set (STXXL_LIB ${STXXL_DIR}/build/lib/Release/stxxl.lib)
+
+	add_custom_command(
+		  OUTPUT ${STXXL_LIB}
+		  COMMAND cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && cmake --build . --config Release ##${CMAKE_BUILD_TYPE}
+		  #DEPENDS ${SOURCE_FILES} /tmp/bin/create_foo_hh main.cpp
+		  WORKING_DIRECTORY ${STXXL_DIR}
+		)
+
+	else()
+		add_custom_command(
+			OUTPUT ${STXXL_LIB}
+			COMMAND cd build && cmake .. -DCMAKE_BUILD_TYPE=Release && cmake --build .
+			#DEPENDS ${SOURCE_FILES} /tmp/bin/create_foo_hh main.cpp
+			WORKING_DIRECTORY ${STXXL_DIR}
+		)
+endif()
 
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/stxxl/include)
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/stxxl/build/include)
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/tclap/include)
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/cereal/include)
-
-if(MSVC)
-	include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../../external/dirent_win)
-endif()
 
 
 
