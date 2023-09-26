@@ -17,9 +17,11 @@ Please, use --recursive when cloning this repository.
 `git clone --recursive https://github.com/DanielaCabiddu/OOCTriTile`
 
 ## How to make it work
+
+### Include OOCTriTile in your C++ project
 OOCTriTile is provided as a header-only library, included into the *include* folder. To include OOCTriTile in your project, simply include the *include* folder in your code.
 
-### Build status
+### Build example applications
 
 #### Linux-Ubuntu (latest)
 
