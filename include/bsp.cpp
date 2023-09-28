@@ -246,7 +246,8 @@ void BinarySpacePartition::create_bufferzone(const int leaf_pos, const int buffe
     }
 }
 
-void BinarySpacePartition::fill (const std::string input_binary_filename)
+void BinarySpacePartition::fill (const std::string input_binary_filename,
+                                const uint n_input_files)
 {
     if (leaves.size() == 0)
         return;
@@ -267,147 +268,153 @@ void BinarySpacePartition::fill (const std::string input_binary_filename)
         exit(1);
     }
 
-    stxxl::uint64 n_vertices, n_triangles;
+    stxxl::uint64 counter = 0;
 
-    binary_mesh.read (reinterpret_cast<char *>(&n_vertices),sizeof(n_vertices));
-    binary_mesh.read (reinterpret_cast<char *>(&n_triangles),sizeof(n_triangles));
-
-    double x, y, z;
-
-    int curr_cell_pos = 0;
-    int curr_cell_id = 0;
-
-    std::cout << "[VERTEX CLASSIFICATION] Running ..." << std::endl;
-
-    stxxl::uint64 perc_v = (stxxl::uint64)(n_vertices / 10);
-
-    // vertex classification
-    for (stxxl::uint64 vid = 0; vid < n_vertices; vid++)
+    for (uint f=0; f < n_input_files; f++)
     {
-        if ((vid%perc_v) == 0)
-            std::cout << " --- --- Reading Vertices .. " << vid << " \\ " << n_vertices << " ( " << (vid / perc_v) * 10 << "% )" << std::endl;
+        stxxl::uint64 n_vertices, n_triangles;
 
-        if (vid == n_vertices - 1)
-            std::cout << " --- --- Reading Vertices .. " << vid + 1 << " \\ " << n_vertices << " -- COMPLETED" << std::endl;
+        binary_mesh.read (reinterpret_cast<char *>(&n_vertices),sizeof(n_vertices));
+        binary_mesh.read (reinterpret_cast<char *>(&n_triangles),sizeof(n_triangles));
 
-        // read point
-        binary_mesh.read (reinterpret_cast<char *>(&x),sizeof(x));
-        binary_mesh.read (reinterpret_cast<char *>(&y),sizeof(y));
-        binary_mesh.read (reinterpret_cast<char *>(&z),sizeof(z));
+        double x, y, z;
 
-        // search for the corresponding cell
-        if (!cell->hasPoint(x, y, z))
+        int curr_cell_pos = 0;
+        int curr_cell_id = 0;
+
+        std::cout << "[VERTEX CLASSIFICATION] Running ..." << std::endl;
+
+        stxxl::uint64 perc_v = (stxxl::uint64)(n_vertices / 10);
+
+        // vertex classification
+        for (stxxl::uint64 vid = 0; vid < n_vertices; vid++)
         {
-            cell = &root;
+            if (perc_v > 0 && ((vid%perc_v) == 0))
+                std::cout << " --- --- Reading Vertices .. " << vid << " \\ " << n_vertices << " ( " << (vid / perc_v) * 10 << "% )" << std::endl;
 
-            while (cell->left != NULL)
+            if (vid == n_vertices - 1)
+                std::cout << " --- --- Reading Vertices .. " << vid + 1 << " \\ " << n_vertices << " -- COMPLETED" << std::endl;
+
+            // read point
+            binary_mesh.read (reinterpret_cast<char *>(&x),sizeof(x));
+            binary_mesh.read (reinterpret_cast<char *>(&y),sizeof(y));
+            binary_mesh.read (reinterpret_cast<char *>(&z),sizeof(z));
+
+            // search for the corresponding cell
+            if (!cell->hasPoint(x, y, z))
             {
-                if (cell->left->hasPoint(x, y, z))
-                    cell = cell->left;
-                else cell = cell->right;
+                cell = &root;
+
+                while (cell->left != NULL)
+                {
+                    if (cell->left->hasPoint(x, y, z))
+                        cell = cell->left;
+                    else cell = cell->right;
+                }
+
+                curr_cell_pos = cell->leaf_ID;
+                curr_cell_id = cell->ID;
             }
 
-            curr_cell_pos = cell->leaf_ID;
-            curr_cell_id = cell->ID;
+            file_manager.write_vertex(curr_cell_pos, counter, x, y, z);     // write inner vertex into the inner vertex file of the current cell
+
+            counter++;
+            cell->n_inner_vertices++;
+
+            if (n_triangles > 0)
+            {
+                vtx2cell.push_back(curr_cell_pos);              // mapping vertex --> bsp_cell
+                vtx2boundary.push_back(UNKNOWN_BOUNDARY_INFO);  // no information about "is it on the boundary of current cell?"
+
+                Point point;
+                point.x = x;
+                point.y = y;
+                point.z = z;
+
+                input_coords.push_back(point);
+            }
         }
 
-        file_manager.write_vertex(curr_cell_pos, vid, x, y, z);     // write inner vertex into the inner vertex file of the current cell
+        std::cout << "[VERTEX CLASSIFICATION] Completed." << std::endl << std::endl;
 
-        cell->n_inner_vertices++;
 
         if (n_triangles > 0)
         {
-            vtx2cell.push_back(curr_cell_pos);              // mapping vertex --> bsp_cell
-            vtx2boundary.push_back(UNKNOWN_BOUNDARY_INFO);  // no information about "is it on the boundary of current cell?"
+            std::cout << "[TRIANGLE CLASSIFICATION] Running ..." << std::endl;
 
-            Point point;
-            point.x = x;
-            point.y = y;
-            point.z = z;
+            stxxl::uint64 perc_t = (stxxl::uint64)(n_triangles / 10);
 
-            input_coords.push_back(point);
-        }
-    }
+            stxxl::uint64 v1 = UINT64_MAX, v2 = UINT64_MAX, v3 = UINT64_MAX;
 
-    std::cout << "[VERTEX CLASSIFICATION] Completed." << std::endl << std::endl;
-
-
-    if (n_triangles > 0)
-    {
-        std::cout << "[TRIANGLE CLASSIFICATION] Running ..." << std::endl;
-
-        stxxl::uint64 perc_t = (stxxl::uint64)(n_triangles / 10);
-
-        stxxl::uint64 v1 = UINT64_MAX, v2 = UINT64_MAX, v3 = UINT64_MAX;
-
-        // triangle classification
-        for (stxxl::uint64 i = 0; i < n_triangles; i++)
-        {
-            if ((i%perc_t) == 0)
-                std::cout << " --- --- Reading Triangles .. " << i << " \\ " << n_triangles << " ( " << (i / perc_t) * 10 << "% )" << std::endl;
-
-            if (i == n_triangles - 1)
-                std::cout << " --- --- Reading Triangles .. " << i + 1 << " \\ " << n_triangles << " -- COMPLETED" << std::endl;
-
-            binary_mesh.read (reinterpret_cast<char *>(&v1),sizeof(v1));
-            binary_mesh.read (reinterpret_cast<char *>(&v2),sizeof(v2));
-            binary_mesh.read (reinterpret_cast<char *>(&v3),sizeof(v3));
-
-            assert (v1 != v2);assert (v1 != v3);assert (v3 != v2);
-
-            std::pair<int, int> selected;
-            std::pair<int, int> neighbor1, neighbor2;
-
-            classify_triangle(v1, v2, v3, selected, neighbor1, neighbor2);   // decide the triangle clasfficication (the cell where it lies)
-
-            assert (v1 != v2);assert (v1 != v3);assert (v3 != v2);
-
-            file_manager.write_triangle(selected.first, v1, v2, v3);     // write inner triangle into the inner triangle file of the current cell
-
-            leaves.at(selected.first)->n_inner_triangles++;     // update the triangle counter of the selected cell
-
-            std::vector<std::pair<int,int>> neighbor_info;
-
-            if (neighbor1.first != -1)     // the triangle partially lies outside the selected cell
+            // triangle classification
+            for (stxxl::uint64 i = 0; i < n_triangles; i++)
             {
-                neighbor_info.push_back(neighbor1);
+                if (perc_t > 0 && ((i%perc_t) == 0))
+                    std::cout << " --- --- Reading Triangles .. " << i << " \\ " << n_triangles << " ( " << (i / perc_t) * 10 << "% )" << std::endl;
 
-                if (neighbor2.first != -1)
-                    neighbor_info.push_back(neighbor2);
+                if (i == n_triangles - 1)
+                    std::cout << " --- --- Reading Triangles .. " << i + 1 << " \\ " << n_triangles << " -- COMPLETED" << std::endl;
+
+                binary_mesh.read (reinterpret_cast<char *>(&v1),sizeof(v1));
+                binary_mesh.read (reinterpret_cast<char *>(&v2),sizeof(v2));
+                binary_mesh.read (reinterpret_cast<char *>(&v3),sizeof(v3));
+
+                assert (v1 != v2);assert (v1 != v3);assert (v3 != v2);
+
+                std::pair<int, int> selected;
+                std::pair<int, int> neighbor1, neighbor2;
+
+                classify_triangle(v1, v2, v3, selected, neighbor1, neighbor2);   // decide the triangle clasfficication (the cell where it lies)
+
+                assert (v1 != v2);assert (v1 != v3);assert (v3 != v2);
+
+                file_manager.write_triangle(selected.first, v1, v2, v3);     // write inner triangle into the inner triangle file of the current cell
+
+                leaves.at(selected.first)->n_inner_triangles++;     // update the triangle counter of the selected cell
+
+                std::vector<std::pair<int,int>> neighbor_info;
+
+                if (neighbor1.first != -1)     // the triangle partially lies outside the selected cell
+                {
+                    neighbor_info.push_back(neighbor1);
+
+                    if (neighbor2.first != -1)
+                        neighbor_info.push_back(neighbor2);
+                }
+
+                for (int i=0; i < neighbor_info.size(); i++)
+                {
+                    // add external boundary vertex to boundary vertex file
+                    file_manager.write_boundary_vertex(selected.first, neighbor_info.at(i).second);
+
+                    // update neighbor info in the bsp
+                    if (vtx2boundary.at(neighbor_info.at(i).second) == UNKNOWN_BOUNDARY_INFO)
+                    {
+                        vtx2boundary.at(neighbor_info.at(i).second) = selected.first;
+                    }
+                    else if (vtx2boundary.at(neighbor_info.at(i).second) >= 0 && vtx2boundary.at(neighbor_info.at(i).second) != selected.first)
+                    {
+                        ConstrainedVertex constrained_vertex;
+                        constrained_vertex.vid = neighbor_info.at(i).second;
+                        constrained_vertex.cells.insert(vtx2boundary.at(neighbor_info.at(i).second));
+                        constrained_vertex.cells.insert(selected.first);
+
+                        constrained_vertices[neighbor_info.at(i).second] = (constrained_vertex);
+
+                        vtx2boundary.at(neighbor_info.at(i).second) = CONSTRAINED_BOUNDARY_VERTEX; // constrained: it is shared among more than 2
+                    }
+                    else if (vtx2boundary.at(neighbor_info.at(i).second) == CONSTRAINED_BOUNDARY_VERTEX)
+                    {
+                        constrained_vertices.find(neighbor_info.at(i).second)->second.cells.insert(selected.first);
+                    }
+
+                    cell->neighbor_bsp_cells.insert(neighbor_info.at(i).first);
+                    leaves.at(neighbor_info.at(i).first)->neighbor_bsp_cells.insert(selected.first);
+                }
             }
 
-            for (int i=0; i < neighbor_info.size(); i++)
-            {
-                // add external boundary vertex to boundary vertex file
-                file_manager.write_boundary_vertex(selected.first, neighbor_info.at(i).second);
-
-                // update neighbor info in the bsp
-                if (vtx2boundary.at(neighbor_info.at(i).second) == UNKNOWN_BOUNDARY_INFO)
-                {
-                    vtx2boundary.at(neighbor_info.at(i).second) = selected.first;
-                }
-                else if (vtx2boundary.at(neighbor_info.at(i).second) >= 0 && vtx2boundary.at(neighbor_info.at(i).second) != selected.first)
-                {
-                    ConstrainedVertex constrained_vertex;
-                    constrained_vertex.vid = neighbor_info.at(i).second;
-                    constrained_vertex.cells.insert(vtx2boundary.at(neighbor_info.at(i).second));
-                    constrained_vertex.cells.insert(selected.first);
-
-                    constrained_vertices[neighbor_info.at(i).second] = (constrained_vertex);
-
-                    vtx2boundary.at(neighbor_info.at(i).second) = CONSTRAINED_BOUNDARY_VERTEX; // constrained: it is shared among more than 2
-                }
-                else if (vtx2boundary.at(neighbor_info.at(i).second) == CONSTRAINED_BOUNDARY_VERTEX)
-                {
-                    constrained_vertices.find(neighbor_info.at(i).second)->second.cells.insert(selected.first);
-                }
-
-                cell->neighbor_bsp_cells.insert(neighbor_info.at(i).first);
-                leaves.at(neighbor_info.at(i).first)->neighbor_bsp_cells.insert(selected.first);
-            }
+            std::cout << "[TRIANGLE CLASSIFICATION] Completed.. " << std::endl << std::endl;
         }
-
-        std::cout << "[TRIANGLE CLASSIFICATION] Completed.. " << std::endl << std::endl;
     }
 
     file_manager.close_all();

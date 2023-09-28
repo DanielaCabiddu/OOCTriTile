@@ -77,8 +77,13 @@ int main(int argc, char **argv)
             while ((ent = readdir (dir)) != NULL)
             {
                 std::string path = dirArg.getValue() + "/" + ent->d_name;
-                filenames.push_back(path);
-                printf ("%s\n", path.c_str());
+
+                int ext_pos = path.find_last_of(".");
+                std::string ext = (ext_pos >= 0) ? path.substr(ext_pos) : "";
+
+                if (ext.compare(".off") == 0)
+                    filenames.push_back(path);
+//                printf ("%s\n", path.c_str());
             }
             closedir (dir);
         } else {
@@ -90,7 +95,6 @@ int main(int argc, char **argv)
 
     const std::string output_directory = outArg.getValue();
     const int max_verts = std::atoi(maxvArg.getValue().c_str());
-
 
     std::vector<std::string> out_filenames;
 

@@ -86,7 +86,7 @@ void create_triangle_mesh_tiling (const std::vector<std::string> input_filenames
     bsp.create(stop, out_directory);
 
     // Fill the BSP cells by reading the original input (both vertices and triangles)
-    bsp.fill(binary_filename);
+    bsp.fill(binary_filename, input_filenames.size());
 
     std::cout << "[OUTPUT] Writing output tiles in " << out_directory << " ... " << std::endl;
 

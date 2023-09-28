@@ -28,6 +28,7 @@
 *********************************************************************************/
 #include "read_off.h"
 
+#include <cfloat>
 #include <inttypes.h>
 #include <iostream>
 #include <limits.h>
@@ -42,8 +43,8 @@ void get_bounding_box_and_downsample_and_binary_OFF(const std::vector<std::strin
                                                     Vtx & bb_min,
                                                     Vtx & bb_max)
 {
-    bb_min.x = bb_min.y = bb_min.z = FLT_MAX;
-    bb_max.x = bb_max.y = bb_max.z = -FLT_MAX;
+    bb_min.x = bb_min.y = bb_min.z = DBL_MAX;
+    bb_max.x = bb_max.y = bb_max.z = -DBL_MAX;
 
     char s[256], *line;
 
@@ -70,6 +71,8 @@ void get_bounding_box_and_downsample_and_binary_OFF(const std::vector<std::strin
 
     stxxl::uint64 managed_v = 0;
     stxxl::uint64 managed_t = 0;
+
+    mesh_sample_vertices = 0;
 
     for (int file = 0; file < mesh_filenames.size(); file++)
     {
@@ -114,9 +117,8 @@ void get_bounding_box_and_downsample_and_binary_OFF(const std::vector<std::strin
         binary_mesh.write(reinterpret_cast<const char*>(&n_v), sizeof n_v);
         binary_mesh.write(reinterpret_cast<const char*>(&n_t), sizeof n_t);
 
-        mesh_n_vertices = n_v;
-        mesh_n_triangles = n_t;
-        mesh_sample_vertices = 0;
+        mesh_n_vertices += n_v;
+        mesh_n_triangles += n_t;
 
         stxxl::uint64 perc = (stxxl::uint64)(n_v / 10);
 
@@ -129,7 +131,7 @@ void get_bounding_box_and_downsample_and_binary_OFF(const std::vector<std::strin
 
         for (stxxl::uint64 i = 0; i < n_v; i++)
         {
-            if ((i%perc) == 0)
+            if (perc > 0 && ((i%perc) == 0))
                 std::cout << " --- --- Reading Vertices .. " << i << " \\ " << n_v << " ( " << (i / perc) * 10 << "% )" << std::endl;
 
             if (i == n_v - 1)
@@ -183,7 +185,7 @@ void get_bounding_box_and_downsample_and_binary_OFF(const std::vector<std::strin
 
         for (stxxl::uint64 i = 0; i < n_t; i++)
         {
-            if ((i%perc_t) == 0)
+            if (perc > 0 && ((i%perc_t) == 0))
                 std::cout << " --- --- Reading Triangles .. " << i << " \\ " << n_t << " ( " << (i / perc_t) * 10 << "% )" << std::endl;
 
             if (i == n_t - 1)

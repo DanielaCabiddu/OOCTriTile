@@ -33,6 +33,9 @@ void write_bsp_OFF( BinarySpacePartition &bsp, const std::string out_directory)
 
     stxxl::uint64 perc_leaves = (stxxl::uint64)(bsp.get_n_leaves() / 10);
 
+    if (perc_leaves == 0)
+        perc_leaves = 1;
+
     for (int leaf=0; leaf < bsp.get_n_leaves(); leaf++)
     {
         BspCell *cell = bsp.get_leaf(leaf);
@@ -81,7 +84,7 @@ void write_bsp_OFF( BinarySpacePartition &bsp, const std::string out_directory)
         cell->filename_mesh = out_filename;
         cell->filename_local2global = local2global_filename;
 
-        std::map <stxxl::uint64, int> global_local_vertices;
+        std::map <stxxl::uint64, stxxl::uint64> global_local_vertices;
 
         std::ofstream mesh_out_stream (out_filename.c_str(), std::fstream::out);
         std::ofstream local2global_out_stream (local2global_filename.c_str(), std::fstream::out);
@@ -98,7 +101,7 @@ void write_bsp_OFF( BinarySpacePartition &bsp, const std::string out_directory)
         stxxl::uint64 id;
         double x,y,z;
 
-        int vid = 0;
+        stxxl::uint64 vid = 0;
 
         for (; vid < cell->n_inner_vertices; vid++)
         {
@@ -110,18 +113,26 @@ void write_bsp_OFF( BinarySpacePartition &bsp, const std::string out_directory)
 
             mesh_out_stream << x << " " << y << " " << z << std::endl;
 
-            global_local_vertices[id] = vid;
+            global_local_vertices.insert(std::pair<stxxl::uint64, stxxl::uint64> (id, vid));
 
             local2global_out_stream << id << std::endl;
         }
 
         cell_stream.close();
 
-        for (int v : added_vertices)
+        for (stxxl::uint64 v : added_vertices)
         {
             mesh_out_stream << bsp.get_point(v).x << " " << bsp.get_point(v).y << " " << bsp.get_point(v).z << std::endl;
 
-            global_local_vertices[v] = vid++;
+            uint size = global_local_vertices.size();
+
+            auto it = global_local_vertices.find(v);
+            assert (it == global_local_vertices.end());
+
+            global_local_vertices.insert(std::pair<stxxl::uint64, stxxl::uint64> (v, vid++));
+
+            assert (global_local_vertices.size() != size);
+
 
             local2global_out_stream << v << std::endl;
         }
@@ -142,9 +153,13 @@ void write_bsp_OFF( BinarySpacePartition &bsp, const std::string out_directory)
             cell_stream.read (reinterpret_cast<char *>(&v2),sizeof(v2));
             cell_stream.read (reinterpret_cast<char *>(&v3),sizeof(v3));
 
-            int local_v1 = global_local_vertices.at(v1);
-            int local_v2 = global_local_vertices.at(v2);
-            int local_v3 = global_local_vertices.at(v3);
+            auto it_v1 = global_local_vertices.find(v1);
+            auto it_v2 = global_local_vertices.find(v2);
+            auto it_v3 = global_local_vertices.find(v3);
+
+            int local_v1 = global_local_vertices.find(v1)->second;
+            int local_v2 = global_local_vertices.find(v2)->second;
+            int local_v3 = global_local_vertices.find(v3)->second;
 
             mesh_out_stream << "3 " << local_v1 << " " << local_v2 << " " << local_v3 << std::endl;
         }
