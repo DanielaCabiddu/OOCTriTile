@@ -76,13 +76,13 @@ public:
 
     BinarySpacePartition (const BspCell &cell) { root = cell; leaves.push_back(&root);}
 
-    uint get_n_leaves () const { return leaves.size(); }
-    BspCell *get_leaf (const uint i) { return leaves.at(i); }
+    unsigned int get_n_leaves () const { return leaves.size(); }
+    BspCell *get_leaf (const unsigned int i) { return leaves.at(i); }
 
-    const Point &get_point (const uint i) { return input_coords.at(i); }
+    const Point &get_point (const unsigned int i) { return input_coords.at(i); }
 
     void create (const int max_vtx_per_cell, const std::string out_directory);
-    void fill   (const std::string input_binary_filename, const uint n_input_files);
+    void fill   (const std::string input_binary_filename, const unsigned intn_input_files, bool with_polys = true);
 
     void split_cell (BspCell &cell, const std::string out_directory);
 
@@ -99,7 +99,7 @@ public:
     void serialize( Archive & ar )
     {
         std::vector<BspCell> cells;
-        for (uint l=0; l < leaves.size();l++)
+        for (unsigned int l=0; l < leaves.size();l++)
             cells.push_back(*(leaves.at(l)));
         ar (CEREAL_NVP(cells));
 

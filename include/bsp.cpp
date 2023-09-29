@@ -247,7 +247,8 @@ void BinarySpacePartition::create_bufferzone(const int leaf_pos, const int buffe
 }
 
 void BinarySpacePartition::fill (const std::string input_binary_filename,
-                                const uint n_input_files)
+                                const unsigned int n_input_files,
+                                bool with_polys)
 {
     if (leaves.size() == 0)
         return;
@@ -270,7 +271,7 @@ void BinarySpacePartition::fill (const std::string input_binary_filename,
 
     stxxl::uint64 counter = 0;
 
-    for (uint f=0; f < n_input_files; f++)
+    for (unsigned int f=0; f < n_input_files; f++)
     {
         stxxl::uint64 n_vertices, n_triangles;
 
@@ -321,7 +322,7 @@ void BinarySpacePartition::fill (const std::string input_binary_filename,
             counter++;
             cell->n_inner_vertices++;
 
-            if (n_triangles > 0)
+            if (with_polys)
             {
                 vtx2cell.push_back(curr_cell_pos);              // mapping vertex --> bsp_cell
                 vtx2boundary.push_back(UNKNOWN_BOUNDARY_INFO);  // no information about "is it on the boundary of current cell?"
@@ -338,7 +339,7 @@ void BinarySpacePartition::fill (const std::string input_binary_filename,
         std::cout << "[VERTEX CLASSIFICATION] Completed." << std::endl << std::endl;
 
 
-        if (n_triangles > 0)
+        if (with_polys)
         {
             std::cout << "[TRIANGLE CLASSIFICATION] Running ..." << std::endl;
 
