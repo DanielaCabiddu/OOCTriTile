@@ -124,7 +124,7 @@ void write_bsp_OFF( BinarySpacePartition &bsp, const std::string out_directory)
         {
             mesh_out_stream << bsp.get_point(v).x << " " << bsp.get_point(v).y << " " << bsp.get_point(v).z << std::endl;
 
-            uint size = global_local_vertices.size();
+            unsigned int size = global_local_vertices.size();
 
             auto it = global_local_vertices.find(v);
             assert (it == global_local_vertices.end());
