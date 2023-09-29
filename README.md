@@ -49,7 +49,9 @@ Then, generate the Visual Studio solution via CMake and build it.
 * Daniela Cabiddu (CNR IMATI), Marco Attene (CNR IMATI)
   
 ## Citing us
-OOCTriTile is described into a journal paper (https://doi.org/10.1016/j.cag.2015.05.015, see Sez. 3.1).
+OOCTriTile is described into a journal paper
+
+[![DOI](https://zenodo.org/badge/DOI/10.1016/j.cag.2015.05.015.svg)](https://doi.org/10.1016/j.cag.2015.05.015)
 
 If you use OOCTriTile in your academic projects, please consider citing it using the following BibTeX entry:
 
